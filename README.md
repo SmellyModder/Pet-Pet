@@ -5,7 +5,7 @@ PetPet is a fairly simple Discord Bot that can generate pet-pet GIFs for images 
 To generate a pet-pet GIF use the `pet` command.
 The prefix for this bot is customizable with the `prefix` command.
 
-Invite Link: https://discord.com/api/oauth2/authorize?client_id=727309426549063732&permissions=671386624&scope=bot
+Invite Link: https://discord.com/api/oauth2/authorize?client_id=756617160834416751&permissions=67209216&scope=bot
 
 ## Commands
 * `info/help`
