@@ -19,11 +19,12 @@ mainClassName = 'net/smelly/petpet/PetPet'
 
 repositories {
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     implementation 'net.dv8tion:JDA:4.2.0_181'
-    implementation 'club.minnced:discord-webhooks:0.3.2'
+    implementation 'com.github.SmellyModder:Disparser:1.2.0'
     implementation 'com.google.code.gson:gson:2.8.6'
 
     compile group: 'com.madgag', name: 'animated-gif-lib', version: '1.4'
