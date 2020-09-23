@@ -9,7 +9,7 @@ Invite Link: https://discord.com/api/oauth2/authorize?client_id=7566171608344167
 
 ## Commands
 * `info/help`
-   * Shows info on the bot or a command. `command_name` is optional, meaning it doesn't have to be present in the command.
+   * Shows info on the bot or a command. When `command_name` isn't present it will display info on the bot and list its commands. On the other hand, if `command_name` is present it will show info for that command.
    * Arguments:
       * `<command_name:optional_string>` - The command to get info on
 * `prefix`
