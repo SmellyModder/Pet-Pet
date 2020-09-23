@@ -10,10 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.smelly.petpet.ServerDataManager;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Luke Tonon
@@ -32,14 +29,14 @@ public final class PPCommands {
 	@Aliases(value = "petpet", mergeAliases = true)
 	public static final PetPetCommand PET_PET_COMMAND = registerCommand(new PetPetCommand(), new EmbedBuilder()
 			.setTitle("Pet Commmand Help & Info")
-			.addField("Description", "This command pets any user's profile picture or image. The exported gif to be pet will be an overlaid hand petting the image. There are two extra optional variables for the image export; FPS and scale. " +
-					"When the user argument is not used it will pet any images uploaded with a message.", true)
-			.addField("Arguments", "`<user:optional_user>, <fps:optional_integer> <scale:optional_number>`\n" +
-							"\n`<user:optional_user>` - The user to pet their profile. This takes in a mention or the user's id. The user must be in this server!\n" +
+			.addField("Description", "This command pets any user's profile picture or image. The exported gif to be pet will be an overlaid hand petting the image. There are two extra optional variables for the image export; FPS and scale.\n" +
+					"When the `source` argument is not used it will pet any images uploaded with the message.", true)
+			.addField("Arguments", "`<source:optional_either_user_or_link>, <fps:optional_integer> <scale:optional_number>`\n" +
+							"\n`<source:optional_either_user_or_link>` - The user or source-link to be pet. For users, this takes in a mention or the user's id and the user must be in this server!\n" +
 							"\n`<fps:optional_integer>` - The frame rate to use for the exported gif, defaults to 15. This must be an integer from 0 - 60.\n" +
 							"\n`<scale:optional_number>` - The scale to apply for the input image to use for the exported gif, defaults to 1.0. This must be a positive number.",
 					false)
-			.addField("Examples", "`pet @User#0000 20 1.15`\n`pet 347143578096500736 60`\n`pet 1.25 (With image attached)`", true)
+			.addField("Examples", "`pet @User#0000 20 1.15`\n`pet 347143578096500736 60`\n`pet 1.25 (With image attached)`\n`pet https://rb.gy/bbskhd`", true)
 			.setFooter("Permissions: None\nAliases: pet, petpet")
 			.setColor(7506394)
 			.build()
@@ -79,9 +76,7 @@ public final class PPCommands {
 
 	private static Set<String> createAliases(String... strings) {
 		Set<String> aliases = new HashSet<>();
-		for (String string : strings) {
-			aliases.add(string);
-		}
+		Collections.addAll(aliases, strings);
 		return aliases;
 	}
 }
