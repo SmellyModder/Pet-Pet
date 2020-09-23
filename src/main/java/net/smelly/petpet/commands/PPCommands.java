@@ -49,7 +49,7 @@ public final class PPCommands {
 	public static final PrefixCommand PREFIX_COMMAND = registerCommand(new PrefixCommand(), new EmbedBuilder()
 			.setTitle("Prefix Command Help & Info")
 			.addField("Description", "This command sets a new command prefix for this server. This command requires a one to six character prefix and admin permission.", true)
-			.addField("Arguments", "`<string:one_to_six_string>` - The new one to six character prefix to set as the command prefix.\n", false)
+			.addField("Arguments", "`<prefix:one_to_six_string>` - The new one to six character prefix to set as the command prefix.\n", false)
 			.addField("Examples", "`prefix !`\n`prefix p~`\n`prefix pet`", true)
 			.setFooter("Permissions: Administrator\nAliases: prefix")
 			.setColor(7506394)
