@@ -26,7 +26,6 @@ public final class ThreadedImageDarkener implements Runnable {
 
 			ColorProcessor bottomProcessor = new ColorProcessor(this.bufferedImage, "Bottom", 0, bottomHeight, this.bufferedImage.getWidth(), this.bufferedImage.getHeight());
 			bottomProcessor.start();
-
 			bottomProcessor.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
