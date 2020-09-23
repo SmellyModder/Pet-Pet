@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
+    }
+}
+
+plugins {
+   id "com.github.johnrengelman.shadow" version "2.0.0"
+}
+
+apply plugin: 'java-library'
+apply plugin: 'application'
+
+mainClassName = 'net/smelly/petpet/PetPet'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'net.dv8tion:JDA:4.2.0_181'
+    implementation 'club.minnced:discord-webhooks:0.3.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    compile group: 'com.madgag', name: 'animated-gif-lib', version: '1.4'
+}
+
+shadowJar {
+	manifest {
+		attributes(
+			'Main-Class': 'net.smelly.petpet.PetPet'
+		)
+	}
+}
