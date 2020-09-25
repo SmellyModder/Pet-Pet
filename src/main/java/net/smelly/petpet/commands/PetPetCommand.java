@@ -1,6 +1,7 @@
 package net.smelly.petpet.commands;
 
-import com.madgag.gif.fmsware.AnimatedGifEncoder;
+import com.squareup.gifencoder.*;
+import com.twelvemonkeys.image.ResampleOp;
 import net.smelly.disparser.Command;
 import net.smelly.disparser.CommandContext;
 import net.smelly.disparser.arguments.EitherArgument;
@@ -14,12 +15,14 @@ import net.smelly.disparser.feedback.SimpleCommandExceptionCreator;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.smelly.petpet.ServerDataManager;
-import net.smelly.petpet.ThreadedImageDarkener;
+import net.smelly.petpet.ThreadedImageBrightener;
 
 import javax.imageio.*;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -102,17 +105,19 @@ public final class PetPetCommand extends Command {
 		String gifDirectory = ServerDataManager.INSTANCE.getGifDirectory();
 		File outputGif = new File(String.format("%1$s/petpet_%2$s.gif", gifDirectory, name));
 		FileOutputStream outputStream = new FileOutputStream(outputGif);
-		AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-		encoder.start(outputStream);
-		encoder.setQuality(1);
-		encoder.setTransparent(Color.WHITE, true);
-		encoder.setFrameRate(fps);
-		encoder.setRepeat(0);
-
+		GifEncoder gifEncoder = new GifEncoder(outputStream, 112, 112, 0);
+		ImageOptions options = new ImageOptions()
+				.setTransparencyColor(Color.BLACK.getRGB())
+				.setColorQuantizer(MedianCutQuantizer.INSTANCE)
+				.setDitherer(FloydSteinbergDitherer.INSTANCE)
+				.setDisposalMethod(DisposalMethod.DO_NOT_DISPOSE);
+		Field delayCentiSeconds = options.getClass().getDeclaredField("delayCentiSeconds");
+		delayCentiSeconds.setAccessible(true);
+		delayCentiSeconds.set(options, Math.round(100.0F / fps));
 		try {
 			BufferedImage bufferedImage = ImageIO.read(new File(gifDirectory + "/petpet.png"));
 			BufferedImage image = ImageIO.read(stream);
-			ThreadedImageDarkener imageDarkener = new ThreadedImageDarkener(image);
+			ThreadedImageBrightener imageDarkener = new ThreadedImageBrightener(image, 0.04F);
 			imageDarkener.run();
 
 			int inputWidth = image.getWidth(null);
@@ -129,10 +134,11 @@ public final class PetPetCommand extends Command {
 				drawerTypes[i].drawer.draw(combinedGraphics, image, width, height);
 				combinedGraphics.drawImage(bufferedImage.getSubimage(i * 112, 0, 112, 112), 0, 0, null);
 				combinedGraphics.dispose();
-				encoder.addFrame(combined);
+				int[] rgb = combined.getRGB(0, 0, HAND_SIZE, HAND_SIZE, new int[HAND_SIZE * HAND_SIZE], 0, HAND_SIZE);
+				gifEncoder.addImage(rgb, HAND_SIZE, options);
 			}
 
-			encoder.finish();
+			gifEncoder.finishEncoding();
 			stream.close();
 			context.getEvent().getChannel().sendFile(outputGif).queue();
 			outputGif.deleteOnExit();
@@ -143,19 +149,19 @@ public final class PetPetCommand extends Command {
 
 	private enum FrameDrawerType {
 		FIRST(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(bufferedImage.getScaledInstance(width, height, Image.SCALE_DEFAULT), DEFAULT_X + 4, DEFAULT_Y, null);
+			graphics.drawImage(new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y, null);
 		})),
 		SECOND(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(bufferedImage.getScaledInstance((int) ((float) width * 1.04F), (int) ((float) height * 0.87F), Image.SCALE_DEFAULT), DEFAULT_X + 4, DEFAULT_Y + 8, null);
+			graphics.drawImage(new ResampleOp((int) ((float) width * 1.04F), (int) ((float) height * 0.87F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y + 8, null);
 		})),
 		THIRD(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(bufferedImage.getScaledInstance((int) ((float) width * 1.08F), (int) ((float) height * 0.74F), Image.SCALE_DEFAULT), DEFAULT_X + 4, DEFAULT_Y + 24, null);
+			graphics.drawImage(new ResampleOp((int) ((float) width * 1.08F), (int) ((float) height * 0.74F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y + 24, null);
 		})),
 		FOURTH(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(bufferedImage.getScaledInstance((int) ((float) width * 1.04F), (int) ((float) height * 0.87F), Image.SCALE_DEFAULT), DEFAULT_X - 4, DEFAULT_Y + 8, null);
+			graphics.drawImage(new ResampleOp((int) ((float) width * 1.04F), (int) ((float) height * 0.87F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X - 4, DEFAULT_Y + 8, null);
 		})),
 		LAST(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(bufferedImage.getScaledInstance(width, height, Image.SCALE_DEFAULT), DEFAULT_X, DEFAULT_Y, null);
+			graphics.drawImage(new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X, DEFAULT_Y, null);
 		}));
 
 		private final Drawer drawer;
@@ -166,7 +172,7 @@ public final class PetPetCommand extends Command {
 
 		@FunctionalInterface
 		interface Drawer {
-			void draw(Graphics graphics, Image image, int width, int height);
+			void draw(Graphics graphics, BufferedImage image, int width, int height);
 		}
 	}
 }
