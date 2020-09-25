@@ -147,18 +147,19 @@ public final class PetPetCommand extends Command {
 		}
 	}
 
+	//TODO: Change to work mutatively, as in it scales off the previous scaled image to improve performance.
 	private enum FrameDrawerType {
 		FIRST(((graphics, bufferedImage, width, height) -> {
 			graphics.drawImage(new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y, null);
 		})),
 		SECOND(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(new ResampleOp((int) ((float) width * 1.04F), (int) ((float) height * 0.87F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y + 8, null);
+			graphics.drawImage(new ResampleOp(width, (int) ((float) height * 0.82F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y + 14, null);
 		})),
 		THIRD(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(new ResampleOp((int) ((float) width * 1.08F), (int) ((float) height * 0.74F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X + 4, DEFAULT_Y + 24, null);
+			graphics.drawImage(new ResampleOp((int) ((float) width * 1.1F), (int) ((float) height * 0.81F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X - 4, DEFAULT_Y + 17, null);
 		})),
 		FOURTH(((graphics, bufferedImage, width, height) -> {
-			graphics.drawImage(new ResampleOp((int) ((float) width * 1.04F), (int) ((float) height * 0.87F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X - 4, DEFAULT_Y + 8, null);
+			graphics.drawImage(new ResampleOp((int) ((float) width * 1.025F), (int) ((float) height * 0.86F), ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X - 4, DEFAULT_Y + 12, null);
 		})),
 		LAST(((graphics, bufferedImage, width, height) -> {
 			graphics.drawImage(new ResampleOp(width, height, ResampleOp.FILTER_LANCZOS).filter(bufferedImage, null), DEFAULT_X, DEFAULT_Y, null);
