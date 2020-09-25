@@ -28,8 +28,6 @@ dependencies {
     implementation 'com.github.haraldk:TwelveMonkeys:3.0.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.SmellyModder:gifencoder:271d957b18'
-
-    compile group: 'com.madgag', name: 'animated-gif-lib', version: '1.4'
 }
 
 shadowJar {
