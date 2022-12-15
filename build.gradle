@@ -19,12 +19,12 @@ mainClassName = 'net/smelly/petpet/PetPet'
 
 repositories {
     jcenter()
+    mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'net.dv8tion:JDA:4.2.0_181'
-    implementation 'com.github.SmellyModder:Disparser:1.3.0'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.2'
     implementation 'com.github.haraldk:TwelveMonkeys:3.0.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.SmellyModder:gifencoder:271d957b18'
